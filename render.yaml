@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: kling-training
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: /data/bagsy_training.db
+    disk:
+      name: kling-db
+      mountPath: /data
+      sizeGB: 1

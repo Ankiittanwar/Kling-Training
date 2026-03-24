@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { initDb } = require('./db/database');
 
 const authRoutes = require('./routes/auth');
@@ -26,6 +27,15 @@ app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+// Serve React frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const clientDist = path.join(__dirname, '../client/dist');
+  app.use(express.static(clientDist));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
-  console.log(`BAGSY Training API running on http://localhost:${PORT}`);
+  console.log(`Kling Training API running on http://localhost:${PORT}`);
 });

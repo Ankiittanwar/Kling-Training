@@ -2,7 +2,7 @@ const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = path.join(__dirname, 'bagsy_training.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'bagsy_training.db');
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
 
 let db;
