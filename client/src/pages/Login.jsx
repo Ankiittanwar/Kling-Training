@@ -38,31 +38,38 @@ export default function Login() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel — brand */}
-      <div className="hidden lg:flex lg:w-1/2 bg-navy flex-col items-center justify-center relative overflow-hidden">
-        {/* Decorative circles */}
-        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#2CC4BD]/5 blur-3xl" />
-        <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-[#2CC4BD]/8 blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/3" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/5" />
+      <div
+        className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden"
+        style={{ background: 'linear-gradient(145deg, #0d1f2d 0%, #0f2a3a 50%, #0a1e2e 100%)' }}
+      >
+        {/* Decorative glow blobs */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: '#2CC4BD' }} />
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-10" style={{ background: '#2CC4BD' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full border border-white/5" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full border border-white/5" />
 
-        <div className="relative z-10 text-center px-12">
-          <img
-            src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
-            alt="Kling Trading"
-            className="h-16 w-auto object-contain mx-auto mb-10"
-          />
-          <h2 className="text-white/90 text-2xl font-semibold mb-3 leading-snug">
+        <div className="relative z-10 text-center px-14">
+          {/* Logo on white card so it's always visible */}
+          <div className="bg-white rounded-2xl px-10 py-6 inline-block mb-10 shadow-2xl">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
+              alt="Kling Trading"
+              className="h-12 w-auto object-contain"
+            />
+          </div>
+
+          <h2 className="text-white text-2xl font-bold mb-4 leading-snug tracking-tight">
             Staff Training Portal
           </h2>
-          <p className="text-white/35 text-sm leading-relaxed max-w-xs">
-            Empower your team with the knowledge to deliver exceptional customer experiences.
+          <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto">
+            Know our brands. Master our products.<br />Represent Kling with confidence every day.
           </p>
 
           <div className="mt-12 grid grid-cols-3 gap-6 text-center">
             {[['8', 'Modules'], ['50+', 'Questions'], ['5', 'Brands']].map(([n, l]) => (
-              <div key={l}>
+              <div key={l} className="bg-white/5 rounded-xl py-3 px-2 border border-white/8">
                 <div className="text-[#2CC4BD] text-2xl font-bold">{n}</div>
-                <div className="text-white/30 text-xs mt-1 tracking-wide">{l}</div>
+                <div className="text-white/40 text-xs mt-1 tracking-wide uppercase">{l}</div>
               </div>
             ))}
           </div>
