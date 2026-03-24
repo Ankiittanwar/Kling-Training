@@ -3,7 +3,7 @@ import axios from 'axios';
 // In production (Vercel), VITE_API_URL = your Render backend URL
 // In development, falls back to /api (proxied to localhost:3001 by Vite)
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://kling-training-api.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
 api.interceptors.request.use(config => {
