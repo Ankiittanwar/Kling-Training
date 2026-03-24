@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment variables — never commit real secrets
+.env
+.env.local
+.env.production
+server/.env
+
+# SQLite database files — generated at runtime by seed.js
+*.db
+*.db-shm
+*.db-wal
+
+# Build output
+client/dist/
+client/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo

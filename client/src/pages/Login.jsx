@@ -1,0 +1,169 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api';
+import { useAuth } from '../context/AuthContext';
+
+export default function Login() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  function handle(e) {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    setError('');
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
+      const payload = mode === 'login'
+        ? { email: form.email, password: form.password }
+        : { name: form.name, email: form.email, password: form.password };
+      const { data } = await api.post(endpoint, payload);
+      login(data.token, data.user);
+      navigate(data.user.role === 'admin' ? '/admin' : '/');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex">
+      {/* Left panel — brand */}
+      <div className="hidden lg:flex lg:w-1/2 bg-navy flex-col items-center justify-center relative overflow-hidden">
+        {/* Decorative circles */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#2CC4BD]/5 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-[#2CC4BD]/8 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/3" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/5" />
+
+        <div className="relative z-10 text-center px-12">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
+            alt="Kling Trading"
+            className="h-16 w-auto object-contain mx-auto mb-10"
+          />
+          <h2 className="text-white/90 text-2xl font-semibold mb-3 leading-snug">
+            Staff Training Portal
+          </h2>
+          <p className="text-white/35 text-sm leading-relaxed max-w-xs">
+            Empower your team with the knowledge to deliver exceptional customer experiences.
+          </p>
+
+          <div className="mt-12 grid grid-cols-3 gap-6 text-center">
+            {[['8', 'Modules'], ['50+', 'Questions'], ['5', 'Brands']].map(([n, l]) => (
+              <div key={l}>
+                <div className="text-[#2CC4BD] text-2xl font-bold">{n}</div>
+                <div className="text-white/30 text-xs mt-1 tracking-wide">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex-1 flex items-center justify-center bg-slate-50 px-6 py-12">
+        <div className="w-full max-w-sm">
+          {/* Mobile logo */}
+          <div className="lg:hidden text-center mb-10">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
+              alt="Kling Trading"
+              className="h-10 w-auto object-contain mx-auto mb-2"
+            />
+            <p className="text-gray-400 text-sm">Staff Training Portal</p>
+          </div>
+
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-navy">
+              {mode === 'login' ? 'Welcome back' : 'Create account'}
+            </h1>
+            <p className="text-gray-400 text-sm mt-1">
+              {mode === 'login' ? 'Sign in to your training account' : 'Register to get started'}
+            </p>
+          </div>
+
+          {/* Mode toggle */}
+          <div className="flex bg-gray-100 rounded-xl p-1 mb-7">
+            {['login', 'register'].map(m => (
+              <button
+                key={m}
+                onClick={() => { setMode(m); setError(''); }}
+                className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-150 ${
+                  mode === m
+                    ? 'bg-white text-navy shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
+              >
+                {m === 'login' ? 'Sign In' : 'Register'}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={submit} className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <label className="label">Full Name</label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handle}
+                  placeholder="Your full name"
+                  className="input"
+                  required
+                />
+              </div>
+            )}
+            <div>
+              <label className="label">Email Address</label>
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handle}
+                placeholder="you@klingtravel.com"
+                className="input"
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Password</label>
+              <input
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handle}
+                placeholder="••••••••"
+                className="input"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3 text-sm mt-2"
+            >
+              {loading ? 'Please wait…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  );
+}
