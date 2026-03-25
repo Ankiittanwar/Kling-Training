@@ -13,6 +13,7 @@ export default function Quiz() {
   const [revealed, setRevealed] = useState(false);
   const [result, setResult] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   useEffect(() => {
     api.get(`/quizzes/${id}`).then(res => setQuiz(res.data)).finally(() => setLoading(false));
@@ -52,12 +53,17 @@ export default function Quiz() {
 
   async function submitQuiz() {
     setSubmitting(true);
+    setSubmitError('');
     try {
       const finalAnswers = { ...answers, [q.id]: selected };
       const { data } = await api.post(`/quizzes/${id}/attempt`, { answers: finalAnswers });
       setResult(data);
     } catch (e) {
-      console.error(e);
+      if (e.response?.status === 401) {
+        setSubmitError('Your session has expired. Please sign out and log back in.');
+      } else {
+        setSubmitError('Could not submit quiz. The server may be waking up — please try again.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -196,6 +202,22 @@ export default function Quiz() {
           </div>
         )}
 
+        {/* Submit error */}
+        {submitError && (
+          <div className="mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600 flex items-start gap-2">
+            <span>⚠️</span>
+            <div>
+              <p>{submitError}</p>
+              <button
+                onClick={() => { setSubmitError(''); submitQuiz(); }}
+                className="mt-2 text-xs font-semibold text-red-700 underline underline-offset-2"
+              >
+                Try again
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="mt-6 flex justify-between items-center">
           <span className="text-xs text-gray-300">Pass mark: {quiz.pass_score}%</span>
@@ -205,7 +227,12 @@ export default function Quiz() {
             </button>
           ) : (
             <button onClick={next} disabled={submitting} className="btn-secondary">
-              {submitting ? 'Submitting…' : current < questions.length - 1 ? 'Next Question →' : 'Finish Quiz'}
+              {submitting ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Submitting…
+                </span>
+              ) : current < questions.length - 1 ? 'Next Question →' : 'Finish Quiz ✓'}
             </button>
           )}
         </div>

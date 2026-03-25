@@ -16,13 +16,21 @@ export default function LearningHub() {
   const [quizzes, setQuizzes] = useState([]);
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
-  useEffect(() => {
-    Promise.all([api.get('/modules'), api.get('/quizzes')]).then(([mRes, qRes]) => {
-      setModules(mRes.data);
-      setQuizzes(qRes.data);
-    }).finally(() => setLoading(false));
-  }, []);
+  function fetchData() {
+    setLoading(true);
+    setLoadError('');
+    Promise.all([api.get('/modules'), api.get('/quizzes')])
+      .then(([mRes, qRes]) => {
+        setModules(mRes.data);
+        setQuizzes(qRes.data);
+      })
+      .catch(() => setLoadError('Server is starting up — this can take 30–60 seconds on first load.'))
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => { fetchData(); }, []);
 
   const filtered = filter === 'All' ? modules : modules.filter(m => m.category === filter);
 
@@ -31,8 +39,20 @@ export default function LearningHub() {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="w-6 h-6 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center h-64 gap-3">
+      <div className="w-6 h-6 border-2 border-[#2CC4BD] border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-gray-400">Loading your modules…</p>
+    </div>
+  );
+
+  if (loadError) return (
+    <div className="max-w-md mx-auto px-4 py-20 text-center">
+      <div className="text-5xl mb-4">⏳</div>
+      <h2 className="text-lg font-bold text-navy mb-2">Server is waking up</h2>
+      <p className="text-sm text-gray-500 mb-6">{loadError}</p>
+      <button onClick={fetchData} className="btn-primary">
+        Try Again
+      </button>
     </div>
   );
 

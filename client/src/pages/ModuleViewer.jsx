@@ -8,30 +8,58 @@ export default function ModuleViewer() {
   const [module, setModule] = useState(null);
   const [quiz, setQuiz] = useState(null);
   const [marking, setMarking] = useState(false);
+  const [markError, setMarkError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
-    Promise.all([api.get(`/modules/${id}`), api.get('/quizzes')]).then(([mRes, qRes]) => {
-      setModule(mRes.data);
-      setQuiz(qRes.data.find(q => q.module_id === parseInt(id)));
-    }).finally(() => setLoading(false));
+    setLoading(true);
+    setLoadError('');
+    Promise.all([api.get(`/modules/${id}`), api.get('/quizzes')])
+      .then(([mRes, qRes]) => {
+        setModule(mRes.data);
+        setQuiz(qRes.data.find(q => q.module_id === parseInt(id)));
+      })
+      .catch(() => setLoadError('Could not load module. The server may be starting up — please wait a moment and refresh.'))
+      .finally(() => setLoading(false));
   }, [id]);
 
   async function markComplete() {
     setMarking(true);
+    setMarkError('');
     try {
       await api.post(`/progress/module/${id}`);
       setModule(m => ({ ...m, completed: true }));
+    } catch (e) {
+      const msg = e.response?.data?.error || '';
+      if (e.response?.status === 401) {
+        setMarkError('Your session has expired. Please sign out and log back in.');
+      } else {
+        setMarkError('Could not save progress. The server may be waking up — please try again in a moment.');
+      }
     } finally {
       setMarking(false);
     }
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="w-6 h-6 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+    <div className="flex flex-col items-center justify-center h-64 gap-3">
+      <div className="w-6 h-6 border-2 border-[#2CC4BD] border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-gray-400">Loading module…</p>
     </div>
   );
+
+  if (loadError) return (
+    <div className="max-w-xl mx-auto px-4 py-16 text-center">
+      <div className="text-4xl mb-4">⏳</div>
+      <h2 className="text-lg font-bold text-navy mb-2">Server is starting up</h2>
+      <p className="text-sm text-gray-500 mb-6">{loadError}</p>
+      <button onClick={() => window.location.reload()} className="btn-primary">
+        Refresh Page
+      </button>
+    </div>
+  );
+
   if (!module) return <div className="text-center py-16 text-gray-400">Module not found.</div>;
 
   return (
@@ -70,16 +98,29 @@ export default function ModuleViewer() {
         />
       </div>
 
+      {/* Error message */}
+      {markError && (
+        <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-sm text-red-600 flex items-start gap-2">
+          <span className="text-base">⚠️</span>
+          <span>{markError}</span>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="flex items-center gap-3 flex-wrap">
         {!module.completed ? (
           <button onClick={markComplete} disabled={marking} className="btn-primary">
-            {marking ? 'Saving…' : '✓ Mark as Complete'}
+            {marking ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                Saving…
+              </span>
+            ) : '✓ Mark as Complete'}
           </button>
         ) : (
           <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-lg">
             <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Module completed
+            Module completed ✓
           </div>
         )}
         {quiz && (
