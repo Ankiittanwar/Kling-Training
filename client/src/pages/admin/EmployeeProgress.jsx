@@ -10,6 +10,10 @@ export default function EmployeeProgress() {
   const [addForm, setAddForm] = useState({ name: '', email: '', password: '' });
   const [addError, setAddError] = useState('');
   const [deleteId, setDeleteId] = useState(null);
+  const [resetId, setResetId] = useState(null);
+  const [resetPw, setResetPw] = useState('');
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
 
   function fetchEmployees() {
     return api.get('/admin/employees').then(r => setEmployees(r.data));
@@ -32,6 +36,18 @@ export default function EmployeeProgress() {
       fetchEmployees();
     } catch (err) {
       setAddError(err.response?.data?.error || 'Error adding employee');
+    }
+  }
+
+  async function resetPassword(id) {
+    setResetError('');
+    setResetSuccess('');
+    try {
+      await api.post(`/admin/employees/${id}/reset-password`, { newPassword: resetPw });
+      setResetSuccess('Password reset successfully!');
+      setResetPw('');
+    } catch (err) {
+      setResetError(err.response?.data?.error || 'Something went wrong');
     }
   }
 
@@ -110,8 +126,18 @@ export default function EmployeeProgress() {
             <div className="card text-center text-gray-400 py-16">Loading…</div>
           ) : (
             <div className="card">
-              <h2 className="font-bold text-navy text-lg">{detail.name}</h2>
-              <p className="text-sm text-gray-400">{detail.email}</p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="font-bold text-navy text-lg">{detail.name}</h2>
+                  <p className="text-sm text-gray-400">{detail.email}</p>
+                </div>
+                <button
+                  onClick={() => { setResetId(detail.id); setResetPw(''); setResetError(''); setResetSuccess(''); }}
+                  className="text-xs font-medium text-orange-500 hover:text-orange-700 border border-orange-200 hover:border-orange-400 rounded-lg px-3 py-1.5 transition-colors"
+                >
+                  Reset Password
+                </button>
+              </div>
 
               <div className="mt-4">
                 <h3 className="font-semibold text-gray-700 text-sm mb-2">Modules Completed ({detail.modulesCompleted.length})</h3>
@@ -172,6 +198,33 @@ export default function EmployeeProgress() {
                 <button type="button" onClick={() => setShowAdd(false)} className="btn-outline flex-1">Cancel</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {resetId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+            <h3 className="font-bold text-navy text-lg mb-1">Reset Password</h3>
+            <p className="text-gray-400 text-sm mb-4">Set a new password for this employee.</p>
+            <div className="space-y-3">
+              <div>
+                <label className="label">New Password</label>
+                <input
+                  type="password"
+                  className="input"
+                  placeholder="••••••••"
+                  value={resetPw}
+                  onChange={e => { setResetPw(e.target.value); setResetError(''); setResetSuccess(''); }}
+                />
+              </div>
+              {resetError && <p className="text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-2">{resetError}</p>}
+              {resetSuccess && <p className="text-emerald-600 text-sm bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2">{resetSuccess}</p>}
+              <div className="flex gap-3 mt-2">
+                <button onClick={() => resetPassword(resetId)} className="btn-primary flex-1">Reset</button>
+                <button onClick={() => setResetId(null)} className="btn-outline flex-1">Cancel</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

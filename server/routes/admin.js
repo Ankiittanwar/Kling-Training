@@ -122,6 +122,21 @@ router.post('/employees', (req, res) => {
   res.status(201).json(user);
 });
 
+// Admin: reset employee password
+router.post('/employees/:id/reset-password', (req, res) => {
+  const bcrypt = require('bcryptjs');
+  const { newPassword } = req.body;
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+  const db = getDb();
+  const emp = db.prepare("SELECT id FROM users WHERE id = ? AND role='employee'").get(req.params.id);
+  if (!emp) return res.status(404).json({ error: 'Employee not found' });
+  const hash = bcrypt.hashSync(newPassword, 10);
+  db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hash, req.params.id);
+  res.json({ message: 'Password reset successfully' });
+});
+
 // Admin: delete employee
 router.delete('/employees/:id', (req, res) => {
   const db = getDb();
