@@ -10,6 +10,9 @@ router.post('/register', (req, res) => {
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required' });
   }
+  if (!email.endsWith('@klingtravel.com')) {
+    return res.status(400).json({ error: 'Only @klingtravel.com email addresses can register' });
+  }
   const db = getDb();
   const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (existing) return res.status(409).json({ error: 'Email already registered' });

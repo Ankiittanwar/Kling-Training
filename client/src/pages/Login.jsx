@@ -20,6 +20,11 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    if (mode === 'register' && !form.email.endsWith('@klingtravel.com')) {
+      setError('Only @klingtravel.com email addresses can register');
+      setLoading(false);
+      return;
+    }
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
       const payload = mode === 'login'
