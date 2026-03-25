@@ -17,6 +17,37 @@ export default function MyDashboard() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pwForm, setPwForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState('');
+  const [pwLoading, setPwLoading] = useState(false);
+
+  function handlePw(e) {
+    setPwForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    setPwError('');
+    setPwSuccess('');
+  }
+
+  async function submitPw(e) {
+    e.preventDefault();
+    if (pwForm.newPassword !== pwForm.confirmPassword) {
+      setPwError('New passwords do not match');
+      return;
+    }
+    setPwLoading(true);
+    try {
+      await api.post('/auth/change-password', {
+        currentPassword: pwForm.currentPassword,
+        newPassword: pwForm.newPassword,
+      });
+      setPwSuccess('Password changed successfully!');
+      setPwForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (err) {
+      setPwError(err.response?.data?.error || 'Something went wrong');
+    } finally {
+      setPwLoading(false);
+    }
+  }
 
   useEffect(() => {
     api.get('/progress/my').then(res => setData(res.data)).finally(() => setLoading(false));
@@ -80,6 +111,30 @@ export default function MyDashboard() {
         ) : (
           <p className="text-gray-300 text-sm">No modules completed yet. <Link to="/" className="text-[#2CC4BD] hover:underline">Start learning →</Link></p>
         )}
+      </div>
+
+      {/* Change Password */}
+      <div className="card mb-5">
+        <h2 className="font-bold text-navy text-base mb-4">Change Password</h2>
+        <form onSubmit={submitPw} className="space-y-3 max-w-sm">
+          <div>
+            <label className="label">Current Password</label>
+            <input name="currentPassword" type="password" value={pwForm.currentPassword} onChange={handlePw} className="input" required placeholder="••••••••" />
+          </div>
+          <div>
+            <label className="label">New Password</label>
+            <input name="newPassword" type="password" value={pwForm.newPassword} onChange={handlePw} className="input" required placeholder="••••••••" />
+          </div>
+          <div>
+            <label className="label">Confirm New Password</label>
+            <input name="confirmPassword" type="password" value={pwForm.confirmPassword} onChange={handlePw} className="input" required placeholder="••••••••" />
+          </div>
+          {pwError && <div className="text-red-600 text-sm bg-red-50 border border-red-100 rounded-xl px-4 py-3">{pwError}</div>}
+          {pwSuccess && <div className="text-emerald-600 text-sm bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">{pwSuccess}</div>}
+          <button type="submit" disabled={pwLoading} className="btn-primary py-2.5 text-sm px-6">
+            {pwLoading ? 'Saving…' : 'Update Password'}
+          </button>
+        </form>
       </div>
 
       {/* Quiz history */}
