@@ -157,7 +157,11 @@
     @apply leading-relaxed;
   }
   .module-content table {
-    @apply w-full border-collapse mb-6 text-sm;
+    @apply border-collapse mb-6 text-sm;
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .module-content th {
     @apply px-4 py-2.5 text-left font-semibold text-xs uppercase tracking-wide text-white;

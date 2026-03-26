@@ -22,7 +22,7 @@ export default function Leaderboard() {
 
       {/* Top 3 podium */}
       {rows.length >= 3 && (
-        <div className="flex items-end justify-center gap-4 mb-8">
+        <div className="flex items-end justify-center gap-2 sm:gap-4 mb-8">
           {[rows[1], rows[0], rows[2]].map((r, i) => {
             const actualRank = i === 0 ? 2 : i === 1 ? 1 : 3;
             const heights = ['h-24', 'h-32', 'h-20'];
@@ -42,11 +42,11 @@ export default function Leaderboard() {
       )}
 
       {/* Full table */}
-      <div className="card">
+      <div className="card overflow-x-auto">
         {rows.length === 0 ? (
           <p className="text-gray-400 text-center py-8">No quiz data yet.</p>
         ) : (
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[360px]">
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="text-left py-2 text-gray-500 font-medium w-12">Rank</th>

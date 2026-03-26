@@ -143,8 +143,8 @@ export default function MyDashboard() {
         {quizAttempts.length === 0 ? (
           <p className="text-gray-300 text-sm">No quiz attempts yet. <Link to="/" className="text-[#2CC4BD] hover:underline">Take a quiz →</Link></p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto -mx-1">
+            <table className="w-full text-sm min-w-[380px]">
               <thead>
                 <tr className="border-b border-gray-100">
                   <th className="text-left py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Quiz</th>

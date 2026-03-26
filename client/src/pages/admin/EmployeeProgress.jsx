@@ -77,7 +77,7 @@ export default function EmployeeProgress() {
           {employees.length === 0 ? (
             <p className="text-gray-400 text-sm">No employees yet.</p>
           ) : (
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[320px]">
               <thead>
                 <tr className="border-b border-gray-200">
                   <th className="text-left py-2 text-gray-500 font-medium">Name</th>

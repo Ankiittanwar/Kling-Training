@@ -80,7 +80,7 @@ export default function Quiz() {
           <h2 className="text-2xl font-bold text-navy">{result.passed ? 'Well Done!' : 'Keep Studying!'}</h2>
           <p className="text-gray-400 text-sm mt-1">{quiz.title}</p>
 
-          <div className="flex justify-center gap-10 my-8">
+          <div className="flex justify-center gap-6 sm:gap-10 my-8 flex-wrap">
             <div>
               <div className={`text-4xl font-bold ${result.passed ? 'text-emerald-500' : 'text-red-500'}`}>
                 {result.score}%

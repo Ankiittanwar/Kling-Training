@@ -82,7 +82,8 @@ export default function AdminDashboard() {
         {employees.length === 0 ? (
           <p className="text-gray-300 text-sm">No employees registered yet.</p>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto -mx-1">
+          <table className="w-full text-sm min-w-[400px]">
             <thead>
               <tr className="border-b border-gray-100">
                 <th className="text-left py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</th>
@@ -106,6 +107,7 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>
