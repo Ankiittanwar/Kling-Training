@@ -48,22 +48,33 @@ export default function Login() {
         style={{ background: 'linear-gradient(145deg, #0d1f2d 0%, #0f2a3a 50%, #0a1e2e 100%)' }}
       >
 
-        <div className="relative z-10 text-center px-14">
-          {/* Logo on white card so it's always visible */}
-          <div className="bg-white rounded-2xl px-10 py-6 inline-block mb-10 shadow-2xl">
-            <img
-              src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
-              alt="Kling Trading"
-              className="h-12 w-auto object-contain"
-            />
-          </div>
+        <div className="relative z-10 text-center">
+          {/* Rings + all content inside */}
+          <div className="relative flex items-center justify-center" style={{ width: '420px', height: '420px' }}>
+            {/* Outer ring */}
+            <div className="absolute inset-0 rounded-full border border-white/10" />
+            {/* Middle ring */}
+            <div className="absolute rounded-full border border-white/15" style={{ width: '340px', height: '340px' }} />
+            {/* Inner ring */}
+            <div className="absolute rounded-full border border-white/20" style={{ width: '260px', height: '260px' }} />
 
-          <h2 className="text-white text-2xl font-bold mb-4 leading-snug tracking-tight">
-            One Team. One Platform.
-          </h2>
-          <p className="text-white/40 text-sm leading-relaxed max-w-xs mx-auto">
-            Kling Trading Internal Platform
-          </p>
+            {/* Content centered inside rings */}
+            <div className="relative flex flex-col items-center gap-3">
+              <div className="bg-white rounded-xl px-7 py-4 shadow-xl">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
+                  alt="Kling Trading"
+                  className="h-9 w-auto object-contain"
+                />
+              </div>
+              <h2 className="text-white text-base font-semibold tracking-wide">
+                One Team. One Platform.
+              </h2>
+              <p className="text-white/40 text-xs tracking-wide">
+                Kling Trading Internal Platform
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
