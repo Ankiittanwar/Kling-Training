@@ -64,7 +64,7 @@ export default function Login() {
                 <img
                   src="https://cdn.shopify.com/s/files/1/0691/0063/4326/files/Kling-logo.png?v=1706632130"
                   alt="Kling Trading"
-                  className="h-9 w-auto object-contain"
+                  className="h-14 w-auto object-contain"
                 />
               </div>
               <h2 className="text-white text-base font-semibold tracking-wide">
