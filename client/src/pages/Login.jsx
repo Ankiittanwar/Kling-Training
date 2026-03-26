@@ -47,11 +47,6 @@ export default function Login() {
         className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden"
         style={{ background: 'linear-gradient(145deg, #0d1f2d 0%, #0f2a3a 50%, #0a1e2e 100%)' }}
       >
-        {/* Decorative glow blobs */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: '#2CC4BD' }} />
-        <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full blur-3xl opacity-10" style={{ background: '#2CC4BD' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full border border-white/5" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full border border-white/5" />
 
         <div className="relative z-10 text-center px-14">
           {/* Logo on white card so it's always visible */}
@@ -64,20 +59,11 @@ export default function Login() {
           </div>
 
           <h2 className="text-white text-2xl font-bold mb-4 leading-snug tracking-tight">
-            Staff Training Portal
+            One Team. One Platform.
           </h2>
-          <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto">
-            Know our brands. Master our products.<br />Represent Kling with confidence every day.
+          <p className="text-white/40 text-sm leading-relaxed max-w-xs mx-auto">
+            Kling Trading Internal Platform
           </p>
-
-          <div className="mt-12 grid grid-cols-3 gap-6 text-center">
-            {[['8', 'Modules'], ['50+', 'Questions'], ['5', 'Brands']].map(([n, l]) => (
-              <div key={l} className="bg-white/5 rounded-xl py-3 px-2 border border-white/8">
-                <div className="text-[#2CC4BD] text-2xl font-bold">{n}</div>
-                <div className="text-white/40 text-xs mt-1 tracking-wide uppercase">{l}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
